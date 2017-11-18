@@ -1,16 +1,31 @@
 package com.theironyard.librarymanager;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+
+import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 public class LibraryManagerApplication {
-    private static ConfigurableApplicationContext ctx;
-
     public static void main(String[] args) {
-        ctx = SpringApplication.run(LibraryManagerApplication.class, args);
-        HelloWorld hello = (HelloWorld) ctx.getBean("helloWorld");
+        SpringApplication.run(LibraryManagerApplication.class, args);
+    }
+
+    @Autowired
+    public LibraryManagerApplication(HelloWorld _hello) {
+        _hello.sayHello();
+    }
+
+    private HelloWorld hello;
+
+    @Autowired
+    public void setHello(HelloWorld hello) {
+        this.hello = hello;
+    }
+
+    @PostConstruct
+    public void init() {
         hello.sayHello();
     }
 }
