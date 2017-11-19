@@ -17,8 +17,13 @@ public class MapAuthorService implements AuthorService {
     }
 
     @Override
-    public List<Author> listAllAuthors() {
+    public List<Author> listAll() {
         return new ArrayList<>(authors.values());
+    }
+
+    @Override
+    public Author getById(Integer id) {
+        return authors.get(id);
     }
 
     @Override

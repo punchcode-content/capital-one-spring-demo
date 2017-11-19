@@ -3,6 +3,7 @@ package com.theironyard.librarymanager.controllers;
 import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,11 @@ public class AuthorsController {
 
     @RequestMapping("/")
     public List<Author> index() {
-        return authorService.listAllAuthors();
+        return authorService.listAll();
+    }
+
+    @RequestMapping("/{id}/")
+    public Author show(@PathVariable Integer id) {
+        return authorService.getById(id);
     }
 }
