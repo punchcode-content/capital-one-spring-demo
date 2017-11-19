@@ -19,12 +19,12 @@ public class AuthorsController {
         this.authorService = authorService;
     }
 
-    @RequestMapping("/")
+    @RequestMapping("")
     public List<Author> index() {
         return authorService.listAll();
     }
 
-    @RequestMapping("/{id}/")
+    @RequestMapping("/{id}")
     public Author show(@PathVariable Integer id) {
         return authorService.getById(id);
     }
