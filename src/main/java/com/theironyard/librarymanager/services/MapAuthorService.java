@@ -3,6 +3,7 @@ package com.theironyard.librarymanager.services;
 import com.theironyard.librarymanager.entities.Author;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class MapAuthorService implements AuthorService {
 
     @Override
     public List<Author> listAllAuthors() {
-        return null;
+        return new ArrayList<>(authors.values());
     }
 
     @Override
