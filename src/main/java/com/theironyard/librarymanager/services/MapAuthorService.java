@@ -1,11 +1,13 @@
 package com.theironyard.librarymanager.services;
 
 import com.theironyard.librarymanager.entities.Author;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class MapAuthorService implements AuthorService {
     private Map<Integer, Author> authors;
 
@@ -18,7 +20,8 @@ public class MapAuthorService implements AuthorService {
         return null;
     }
 
-    private void createSampleAuthors() {
+    @Override
+    public void createSampleAuthors() {
         Author author1 = new Author(1, "Kathy Sierra");
         authors.put(1, author1);
 
