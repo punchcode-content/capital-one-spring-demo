@@ -37,6 +37,13 @@ public class MapAuthorService implements AuthorService {
         }
     }
 
+    @Override
+    public Author deleteById(Integer id) {
+        Author author = authors.get(id);
+        authors.remove(id);
+        return author;
+    }
+
     private Integer getNextKey() {
         return Collections.max(authors.keySet()) + 1;
     }

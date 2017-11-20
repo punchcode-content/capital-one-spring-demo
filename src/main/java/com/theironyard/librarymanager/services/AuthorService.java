@@ -11,5 +11,7 @@ public interface AuthorService {
 
     Author saveOrUpdate(Author author);
 
+    Author deleteById(Integer id);
+
     void createSampleAuthors();
 }

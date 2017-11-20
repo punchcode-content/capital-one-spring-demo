@@ -25,7 +25,7 @@ public class AuthorsController {
         return authorService.listAll();
     }
 
-    @RequestMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Author show(@PathVariable Integer id) {
         return authorService.getById(id);
     }
@@ -34,5 +34,10 @@ public class AuthorsController {
     @ResponseStatus(HttpStatus.CREATED)
     public Author saveOrUpdate(@RequestBody Author author) {
         return authorService.saveOrUpdate(author);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public Author delete(@PathVariable Integer id) {
+        return authorService.deleteById(id);
     }
 }
