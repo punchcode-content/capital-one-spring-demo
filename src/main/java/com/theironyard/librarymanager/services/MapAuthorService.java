@@ -3,10 +3,7 @@ package com.theironyard.librarymanager.services;
 import com.theironyard.librarymanager.entities.Author;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MapAuthorService implements AuthorService {
@@ -24,6 +21,24 @@ public class MapAuthorService implements AuthorService {
     @Override
     public Author getById(Integer id) {
         return authors.get(id);
+    }
+
+    @Override
+    public Author saveOrUpdate(Author author) {
+        if (author != null) {
+            if (author.getId() == null) {
+                author.setId(getNextKey());
+            }
+            authors.put(author.getId(), author);
+
+            return author;
+        } else {
+            throw new RuntimeException("Author cannot be null");
+        }
+    }
+
+    private Integer getNextKey() {
+        return Collections.max(authors.keySet()) + 1;
     }
 
     @Override

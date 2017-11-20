@@ -3,14 +3,15 @@ package com.theironyard.librarymanager.controllers;
 import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Controller
 @RequestMapping("/authors")
-@RestController
+@ResponseBody
 public class AuthorsController {
     private AuthorService authorService;
 
@@ -19,7 +20,7 @@ public class AuthorsController {
         this.authorService = authorService;
     }
 
-    @RequestMapping("")
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<Author> index() {
         return authorService.listAll();
     }
@@ -27,5 +28,11 @@ public class AuthorsController {
     @RequestMapping("/{id}")
     public Author show(@PathVariable Integer id) {
         return authorService.getById(id);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Author saveOrUpdate(@RequestBody Author author) {
+        return authorService.saveOrUpdate(author);
     }
 }

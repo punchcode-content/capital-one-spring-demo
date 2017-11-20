@@ -9,5 +9,7 @@ public interface AuthorService {
 
     Author getById(Integer id);
 
+    Author saveOrUpdate(Author author);
+
     void createSampleAuthors();
 }
