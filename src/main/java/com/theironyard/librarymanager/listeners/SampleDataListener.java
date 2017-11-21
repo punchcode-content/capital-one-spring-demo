@@ -74,6 +74,7 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
         book1authors.add(author1);
         book1authors.add(author4);
         book1.setAuthors(book1authors);
+        bookService.saveOrUpdate(book1);
 
         Book book2 = new Book();
         book2.setTitle("Effective Java, 3nd Edition");
@@ -83,6 +84,7 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
         Set<Author> book2authors = new HashSet<>();
         book2authors.add(author3);
         book2.setAuthors(book2authors);
+        bookService.saveOrUpdate(book2);
 
         System.out.println("Sample books loaded");
     }

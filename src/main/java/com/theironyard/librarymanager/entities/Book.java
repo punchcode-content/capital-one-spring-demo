@@ -1,6 +1,7 @@
 package com.theironyard.librarymanager.entities;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Book {
     private Integer id;
@@ -9,6 +10,14 @@ public class Book {
     private Integer yearPublished;
     private Set<Author> authors;
     private Publisher publisher;
+
+    public String getAuthorsString() {
+        if (authors == null || authors.isEmpty()) {
+            return "";
+        }
+
+        return String.join(", ", authors.stream().map(Author::getName).collect(Collectors.toList()));
+    }
 
     public Integer getId() {
         return id;
