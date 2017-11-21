@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Library Manager</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/webjars/org.webjars/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/4.0.0-beta.2/css/bootstrap.min.css}"/>
+</head>
+<body>
+    <div class="container">
+        <h1>Authors</h1>
+        <div th:if="${not #lists.isEmpty(authors)}">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+                <tr th:each="author : ${authors}">
+                    <td th:text="${author.id}"></td>
+                    <td th:text="${author.name}"></td>
+                    <td>
+                        <a class="btn btn-primary" th:href="@{|/authors/${author.id}/edit|}">Edit</a>
+                        <form class="form" th:object="${author}" th:action="@{|/authors/${author.id}/delete|}"
+                              method="POST"
+                              style="display: inline-block;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <a class="btn btn-primary" href="form.html" th:href="@{/authors/new}">New Author</a>
+        </div>
+
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/3.2.1/jquery.min.js"
+            th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+    <script src="https://cdn.jsdelivr.net/webjars/org.webjars.npm/popper.js/1.12.5/dist/popper.min.js"
+            th:src="@{/webjars/popper.js/1.12.5/dist/popper.min.js}"></script>
+    <script src="https://cdn.jsdelivr.net/webjars/org.webjars/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+            th:src="@{/webjars/bootstrap/4.0.0-beta.2/js/bootstrap.min.js}"></script>
+</body>
+</html>

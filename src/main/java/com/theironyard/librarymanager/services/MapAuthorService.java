@@ -45,7 +45,11 @@ public class MapAuthorService implements AuthorService {
     }
 
     private Integer getNextKey() {
-        return Collections.max(authors.keySet()) + 1;
+        if (authors.keySet().isEmpty()) {
+            return 1;
+        } else {
+            return Collections.max(authors.keySet()) + 1;
+        }
     }
 
     @Override
