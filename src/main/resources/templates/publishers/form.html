@@ -12,11 +12,22 @@
 </head>
 <body>
     <div class="container">
-        <h1>Links</h1>
-        <ul>
-            <li><a href="/publishers">Publishers</a></li>
-            <li><a href="/authors">Authors</a></li>
-        </ul>
+        <h1>Add/Edit Publisher</h1>
+        <form class="form" th:object="${publisher}" th:action="@{/publishers}" method="POST">
+            <input type="hidden" th:field="*{id}"/>
+            <div class="form-group">
+                <label for="name" th:for="${#ids.next('name')}">Name</label>
+                <input id="name" type="text" class="form-control" th:field="*{name}"/>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a class="btn btn-warning" th:href="@{/publishers}">Back to Publishers</a>
+            </div>
+        </form>
+
+        <div>
+
+        </div>
     </div>
 
     <!-- Optional JavaScript -->

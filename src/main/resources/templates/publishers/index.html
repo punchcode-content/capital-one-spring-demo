@@ -12,11 +12,33 @@
 </head>
 <body>
     <div class="container">
-        <h1>Links</h1>
-        <ul>
-            <li><a href="/publishers">Publishers</a></li>
-            <li><a href="/authors">Authors</a></li>
-        </ul>
+        <h1>Publishers</h1>
+        <div th:if="${not #lists.isEmpty(publishers)}">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+                <tr th:each="publisher : ${publishers}">
+                    <td th:text="${publisher.id}"></td>
+                    <td th:text="${publisher.name}"></td>
+                    <td>
+                        <a class="btn btn-primary" th:href="@{|/publishers/${publisher.id}/edit|}">Edit</a>
+                        <form class="form" th:object="${publisher}" th:action="@{|/publishers/${publisher.id}/delete|}"
+                              method="POST"
+                              style="display: inline-block;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <a class="btn btn-primary" href="form.html" th:href="@{/publishers/new}">New Author</a>
+        </div>
+
     </div>
 
     <!-- Optional JavaScript -->
