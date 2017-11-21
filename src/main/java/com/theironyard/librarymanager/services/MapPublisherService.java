@@ -51,17 +51,5 @@ public class MapPublisherService implements PublisherService {
             return Collections.max(publishers.keySet()) + 1;
         }
     }
-
-    @Override
-    public void createSamplePublishers() {
-        Publisher publisher1 = new Publisher(1, "Apress");
-        publishers.put(1, publisher1);
-
-        Publisher publisher2 = new Publisher(2, "O'Reilly");
-        publishers.put(2, publisher2);
-
-        Publisher publisher3 = new Publisher(3, "Addison/Wesley");
-        publishers.put(3, publisher3);
-    }
 }
 
