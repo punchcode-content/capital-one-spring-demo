@@ -11,8 +11,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class SampleDataListener implements ApplicationListener<ContextRefreshedEvent> {
@@ -70,7 +70,7 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
         book1.setIsbn("978-0596009205");
         book1.setYearPublished(2005);
         book1.setPublisher(publisher1);
-        Set<Author> book1authors = new HashSet<>();
+        List<Author> book1authors = new ArrayList<>();
         book1authors.add(author1);
         book1authors.add(author4);
         book1.setAuthors(book1authors);
@@ -81,7 +81,7 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
         book2.setIsbn("978-0134685991");
         book2.setYearPublished(2017);
         book2.setPublisher(publisher2);
-        Set<Author> book2authors = new HashSet<>();
+        List<Author> book2authors = new ArrayList<>();
         book2authors.add(author3);
         book2.setAuthors(book2authors);
         bookService.saveOrUpdate(book2);
