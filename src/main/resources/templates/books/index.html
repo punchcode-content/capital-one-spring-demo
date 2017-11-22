@@ -26,7 +26,7 @@
                     <td th:text="${book.id}"></td>
                     <td th:text="${book.title}"></td>
                     <td th:text="${book.authorsString}"></td>
-                    <td th:text="${book.publisher.name}"></td>
+                    <td th:text="${book.publisher} ? ${book.publisher.name}"></td>
                     <td>
                         <a class="btn btn-primary" th:href="@{|/books/${book.id}/edit|}">Edit</a>
                         <form class="form" th:object="${book}" th:action="@{|/books/${book.id}/delete|}"
