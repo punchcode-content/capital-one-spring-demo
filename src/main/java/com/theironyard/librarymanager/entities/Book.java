@@ -1,9 +1,11 @@
 package com.theironyard.librarymanager.entities;
 
+import javax.persistence.Entity;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Entity
 public class Book {
     private Integer id;
     private String title;
@@ -18,7 +20,10 @@ public class Book {
         }
 
         return String.join(", ",
-                authors.stream().filter(Objects::nonNull).map(Author::getName).collect(Collectors.toList()));
+                authors.stream()
+                       .filter(Objects::nonNull)
+                       .map(Author::getName)
+                       .collect(Collectors.toList()));
     }
 
     public Integer getId() {

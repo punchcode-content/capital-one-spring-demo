@@ -1,5 +1,8 @@
 package com.theironyard.librarymanager.entities;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Publisher {
     private Integer id;
     private String name;
