@@ -1,8 +1,5 @@
 package com.theironyard.librarymanager.entities;
 
-import javax.persistence.Entity;
-
-@Entity
 public class Author {
     private Integer id;
     private String name;

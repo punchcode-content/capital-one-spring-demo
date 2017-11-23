@@ -1,6 +1,8 @@
 package com.theironyard.librarymanager.controllers;
 
+import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.entities.Book;
+import com.theironyard.librarymanager.entities.Publisher;
 import com.theironyard.librarymanager.services.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,5 +68,49 @@ public class BooksControllerTests {
         Book book = captor.getValue();
         assertThat(book.getTitle(), equalTo("Test Book"));
         assertThat(book.getIsbn(), equalTo("978-0000000000"));
+    }
+
+    @Test
+    public void testCreateBookWithPublisher() throws Exception {
+        Publisher publisher = new Publisher();
+        publisher.setId(1);
+        publisher.setName("Test Publisher");
+        given(publisherFormatter.parse(eq("1"), anyObject())).willReturn(publisher);
+        mvc.perform(post("/books")
+                .accept(MediaType.TEXT_HTML)
+                .contentType(MediaType.TEXT_HTML)
+                .param("publisher", "1"))
+           .andExpect(status().isFound());
+
+        verify(bookService, times(1)).saveOrUpdate(captor.capture());
+
+        Book book = captor.getValue();
+        assertThat(book.getPublisher(), equalTo(publisher));
+    }
+
+    @Test
+    public void testCreateBookWithAuthors() throws Exception {
+        Author author1 = new Author();
+        author1.setId(1);
+        author1.setName("Test1");
+
+        Author author2 = new Author();
+        author2.setId(2);
+        author2.setName("Test2");
+
+        given(authorFormatter.parse(eq("1"), anyObject())).willReturn(author1);
+        given(authorFormatter.parse(eq("2"), anyObject())).willReturn(author2);
+
+        mvc.perform(post("/books")
+                .accept(MediaType.TEXT_HTML)
+                .contentType(MediaType.TEXT_HTML)
+                .param("authors[0]", "1")
+                .param("authors[1]", "2"))
+           .andExpect(status().isFound());
+
+        verify(bookService, times(1)).saveOrUpdate(captor.capture());
+
+        Book book = captor.getValue();
+        assertThat(book.getAuthorsString(), equalTo("Test1, Test2"));
     }
 }

@@ -1,11 +1,9 @@
 package com.theironyard.librarymanager.entities;
 
-import javax.persistence.Entity;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Entity
 public class Book {
     private Integer id;
     private String title;
