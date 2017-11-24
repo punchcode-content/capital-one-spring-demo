@@ -38,10 +38,9 @@ public class MapPublisherService implements PublisherService {
     }
 
     @Override
-    public Publisher deleteById(Integer id) {
+    public void deleteById(Integer id) {
         Publisher publisher = publishers.get(id);
         publishers.remove(id);
-        return publisher;
     }
 
     private Integer getNextKey() {

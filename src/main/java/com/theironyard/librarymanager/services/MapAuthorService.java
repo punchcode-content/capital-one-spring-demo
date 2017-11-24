@@ -38,10 +38,9 @@ public class MapAuthorService implements AuthorService {
     }
 
     @Override
-    public Author deleteById(Integer id) {
+    public void deleteById(Integer id) {
         Author author = authors.get(id);
         authors.remove(id);
-        return author;
     }
 
     private Integer getNextKey() {

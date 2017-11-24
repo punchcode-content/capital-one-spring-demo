@@ -38,10 +38,9 @@ public class MapBookService implements BookService {
     }
 
     @Override
-    public Book deleteById(Integer id) {
+    public void deleteById(Integer id) {
         Book book = books.get(id);
         books.remove(id);
-        return book;
     }
 
     private Integer getNextKey() {

@@ -9,5 +9,5 @@ public interface EntityService<T> {
 
     T saveOrUpdate(T author);
 
-    T deleteById(Integer id);
+    void deleteById(Integer id);
 }
