@@ -1,14 +1,24 @@
 package com.theironyard.librarymanager.entities;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Book {
     private Integer id;
+
+    @NotNull
+    @Size(min = 1, message = "Title cannot be empty")
     private String title;
+
+    @Pattern(regexp = "^|978-\\d{10}$", message = "ISBN must be 13 digits in the format 978-XXXXXXXXXX")
     private String isbn;
+
     private Integer yearPublished;
+
     private List<Author> authors;
     private Publisher publisher;
 
