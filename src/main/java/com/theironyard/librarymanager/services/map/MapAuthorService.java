@@ -1,6 +1,7 @@
-package com.theironyard.librarymanager.services;
+package com.theironyard.librarymanager.services.map;
 
 import com.theironyard.librarymanager.entities.Author;
+import com.theironyard.librarymanager.services.AuthorService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

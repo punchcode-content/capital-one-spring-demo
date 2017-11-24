@@ -1,6 +1,7 @@
-package com.theironyard.librarymanager.services;
+package com.theironyard.librarymanager.services.jdbc;
 
 import com.theironyard.librarymanager.entities.Author;
+import com.theironyard.librarymanager.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;

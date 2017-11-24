@@ -7,7 +7,7 @@ public interface EntityService<T> {
 
     T getById(Integer id);
 
-    T saveOrUpdate(T author);
+    T saveOrUpdate(T entity);
 
     void deleteById(Integer id);
 }
