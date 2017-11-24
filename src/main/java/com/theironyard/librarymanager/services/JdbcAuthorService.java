@@ -3,6 +3,7 @@ package com.theironyard.librarymanager.services;
 import com.theironyard.librarymanager.entities.Author;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,7 +35,11 @@ public class JdbcAuthorService implements AuthorService {
 
     @Override
     public Author getById(Integer id) {
-        return jdbc.queryForObject("SELECT * FROM authors WHERE id=?", new Object[]{id}, new AuthorRowMapper());
+        try {
+            return jdbc.queryForObject("SELECT * FROM authors WHERE id=?", new Object[]{id}, new AuthorRowMapper());
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
     }
 
     @Override
