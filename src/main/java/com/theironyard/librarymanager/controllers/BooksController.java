@@ -8,13 +8,14 @@ import com.theironyard.librarymanager.services.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -51,8 +52,7 @@ public class BooksController {
     @GetMapping("/new")
     public String newForm(Model model) {
         Book book = new Book();
-        List<Author> authors = Collections.singletonList(new Author());
-        book.setAuthors(authors);
+        book.setAuthors(new ArrayList<>());
         model.addAttribute("book", book);
         model.addAttribute("publishers", publisherService.listAll());
         model.addAttribute("authors", authorService.listAll());
@@ -66,7 +66,6 @@ public class BooksController {
         if (book.getAuthors() == null) {
             book.setAuthors(new ArrayList<>());
         }
-        book.getAuthors().add(new Author());
 
         model.addAttribute("book", book);
         model.addAttribute("publishers", publisherService.listAll());
@@ -75,7 +74,14 @@ public class BooksController {
     }
 
     @PostMapping("")
-    public String saveOrUpdate(Book book) {
+    public String saveOrUpdate(@Valid Book book, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            book.setAuthors(book.getAuthors().stream().filter(Objects::nonNull).collect(Collectors.toList()));
+            model.addAttribute("publishers", publisherService.listAll());
+            model.addAttribute("authors", authorService.listAll());
+            return "books/form";
+        }
+
         if (book.getId() == null) {
             bookService.saveOrUpdate(book);
         } else {
