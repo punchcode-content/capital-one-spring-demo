@@ -1,5 +1,6 @@
 package com.theironyard.librarymanager.services;
 
+import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.entities.Book;
 import com.theironyard.librarymanager.entities.Publisher;
 import org.junit.Test;
@@ -9,10 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasProperty;
 
 @RunWith(SpringRunner.class)
@@ -21,6 +24,7 @@ import static org.hamcrest.Matchers.hasProperty;
 public class BookServiceTests {
     @Autowired BookService bookService;
     @Autowired PublisherService publisherService;
+    @Autowired AuthorService authorService;
 
     @Test
     public void testIdAutomaticallyAssigned() {
@@ -107,5 +111,21 @@ public class BookServiceTests {
 
         Book retrievedBook = bookService.getById(book.getId());
         assertThat(retrievedBook.getPublisher(), nullValue());
+    }
+
+    @Test
+    public void testCanSetAuthors() {
+        Author author = new Author();
+        author.setName("Author");
+        author = authorService.saveOrUpdate(author);
+
+        Book book = new Book();
+        book.setTitle("Book");
+        book.setAuthors(Collections.singletonList(author));
+        book = bookService.saveOrUpdate(book);
+
+        Book retrievedBook = bookService.getById(book.getId());
+        assertThat(retrievedBook.getAuthors(), contains(author));
+
     }
 }

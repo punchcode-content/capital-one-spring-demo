@@ -1,5 +1,6 @@
 package com.theironyard.librarymanager.services.jdbc;
 
+import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.entities.Book;
 import com.theironyard.librarymanager.services.BookService;
 import com.theironyard.librarymanager.services.PublisherService;
@@ -69,6 +70,9 @@ public class JdbcBookService implements BookService {
         }, holder);
         Integer newBookId = holder.getKey().intValue();
         book.setId(newBookId);
+
+        setBookAuthors(book);
+
         return book;
     }
 
@@ -79,7 +83,26 @@ public class JdbcBookService implements BookService {
         }
         jdbc.update("UPDATE books SET title = ?, isbn = ?, year_published = ?, publisher_id = ? WHERE id = ?",
                 book.getTitle(), book.getIsbn(), book.getYearPublished(), publisherId, book.getId());
+
+        setBookAuthors(book);
+
         return book;
+    }
+
+    private List<Author> getAuthorsByBookId(Integer bookId) {
+        return jdbc
+                .query("SELECT a.id, a.name FROM authors_books ab LEFT JOIN authors a ON ab.author_id = a.id WHERE ab.book_id = ?",
+                        new Object[]{bookId}, new JdbcAuthorService.AuthorRowMapper());
+    }
+
+    private void setBookAuthors(Book book) {
+        jdbc.update("DELETE FROM authors_books WHERE book_id = ?", book.getId());
+        if (book.getAuthors() != null) {
+            for (Author author : book.getAuthors()) {
+                jdbc.update("INSERT INTO authors_books(book_id, author_id) VALUES (?, ?)", book.getId(),
+                        author.getId());
+            }
+        }
     }
 
     @Override
@@ -100,6 +123,8 @@ public class JdbcBookService implements BookService {
             if (publisherId != 0) {
                 book.setPublisher(publisherService.getById(publisherId));
             }
+
+            book.setAuthors(getAuthorsByBookId(book.getId()));
 
             return book;
         }

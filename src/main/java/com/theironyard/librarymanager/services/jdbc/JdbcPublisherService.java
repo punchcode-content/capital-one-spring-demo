@@ -75,14 +75,16 @@ public class JdbcPublisherService implements PublisherService {
     public void deleteById(Integer id) {
         jdbc.update("DELETE FROM publishers WHERE id = ?", id);
     }
-}
 
-class PublisherRowMapper implements RowMapper<Publisher> {
-    @Override
-    public Publisher mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Publisher publisher = new Publisher();
-        publisher.setId(rs.getInt("id"));
-        publisher.setName(rs.getString("name"));
-        return publisher;
+    class PublisherRowMapper implements RowMapper<Publisher> {
+        @Override
+        public Publisher mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Publisher publisher = new Publisher();
+            publisher.setId(rs.getInt("id"));
+            publisher.setName(rs.getString("name"));
+            return publisher;
+        }
     }
 }
+
+
