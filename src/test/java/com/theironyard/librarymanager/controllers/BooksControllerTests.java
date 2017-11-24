@@ -79,6 +79,8 @@ public class BooksControllerTests {
         mvc.perform(post("/books")
                 .accept(MediaType.TEXT_HTML)
                 .contentType(MediaType.TEXT_HTML)
+                .param("title", "Test Book")
+                .param("isbn", "978-0000000000")
                 .param("publisher", "1"))
            .andExpect(status().isFound());
 
@@ -104,6 +106,8 @@ public class BooksControllerTests {
         mvc.perform(post("/books")
                 .accept(MediaType.TEXT_HTML)
                 .contentType(MediaType.TEXT_HTML)
+                .param("title", "Test Book")
+                .param("isbn", "978-0000000000")
                 .param("authors[0]", "1")
                 .param("authors[1]", "2"))
            .andExpect(status().isFound());
