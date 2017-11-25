@@ -15,29 +15,29 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 @Service
 @Primary
 public class JdbcPublisherService implements PublisherService {
-    private JdbcTemplate jdbc;
+    private JdbcTemplate jdbcTemplate;
+
 
     @Autowired
-    public void setJdbc(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Publisher> listAll() {
-        return jdbc.query("SELECT * FROM publishers", new PublisherRowMapper());
+        return jdbcTemplate.query("SELECT * FROM publishers", new PublisherRowMapper());
     }
 
     @Override
     public Publisher getById(Integer id) {
         try {
-            return jdbc
+            return jdbcTemplate
                     .queryForObject("SELECT * FROM publishers WHERE id=?", new Object[]{id}, new PublisherRowMapper());
         } catch (EmptyResultDataAccessException ex) {
             return null;
@@ -47,17 +47,17 @@ public class JdbcPublisherService implements PublisherService {
     @Override
     public Publisher saveOrUpdate(Publisher publisher) {
         if (publisher.getId() != null) {
-            return this.update(publisher);
+            return update(publisher);
         }
 
-        return this.create(publisher);
+        return create(publisher);
     }
 
     private Publisher create(Publisher publisher) {
         String sql = "INSERT INTO publishers(name) VALUES(?)";
         KeyHolder holder = new GeneratedKeyHolder();
-        jdbc.update(con -> {
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, publisher.getName());
             return ps;
         }, holder);
@@ -67,13 +67,13 @@ public class JdbcPublisherService implements PublisherService {
     }
 
     private Publisher update(Publisher publisher) {
-        jdbc.update("UPDATE publishers SET name = ? WHERE id = ?", publisher.getName(), publisher.getId());
+        jdbcTemplate.update("UPDATE publishers SET name = ? WHERE id = ?", publisher.getName(), publisher.getId());
         return publisher;
     }
 
     @Override
     public void deleteById(Integer id) {
-        jdbc.update("DELETE FROM publishers WHERE id = ?", id);
+        jdbcTemplate.update("DELETE FROM publishers WHERE id = ?", id);
     }
 
     class PublisherRowMapper implements RowMapper<Publisher> {

@@ -13,13 +13,16 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 @Service
 @Primary
 public class JdbcBookService implements BookService {
-    private JdbcTemplate jdbc;
+    private JdbcTemplate jdbcTemplate;
     private PublisherService publisherService;
 
     @Autowired
@@ -28,19 +31,19 @@ public class JdbcBookService implements BookService {
     }
 
     @Autowired
-    public void setJdbc(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public List<Book> listAll() {
-        return jdbc.query("SELECT * FROM books", new BookRowMapper());
+        return jdbcTemplate.query("SELECT * FROM books", new BookRowMapper());
     }
 
     @Override
     public Book getById(Integer id) {
         try {
-            return jdbc.queryForObject("SELECT * FROM books WHERE id=?", new Object[]{id}, new BookRowMapper());
+            return jdbcTemplate.queryForObject("SELECT * FROM books WHERE id=?", new Object[]{id}, new BookRowMapper());
         } catch (EmptyResultDataAccessException ex) {
             return null;
         }
@@ -49,10 +52,10 @@ public class JdbcBookService implements BookService {
     @Override
     public Book saveOrUpdate(Book book) {
         if (book.getId() != null) {
-            return this.update(book);
+            return update(book);
         }
 
-        return this.create(book);
+        return create(book);
     }
 
     private Book create(Book book) {
@@ -60,8 +63,8 @@ public class JdbcBookService implements BookService {
 
         String sql = "INSERT INTO books(title, isbn, year_published, publisher_id) VALUES (?, ?, ?, ?)";
         KeyHolder holder = new GeneratedKeyHolder();
-        jdbc.update(con -> {
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getIsbn());
             ps.setObject(3, book.getYearPublished(), Types.INTEGER);
@@ -81,7 +84,7 @@ public class JdbcBookService implements BookService {
         if (book.getPublisher() != null) {
             publisherId = book.getPublisher().getId();
         }
-        jdbc.update("UPDATE books SET title = ?, isbn = ?, year_published = ?, publisher_id = ? WHERE id = ?",
+        jdbcTemplate.update("UPDATE books SET title = ?, isbn = ?, year_published = ?, publisher_id = ? WHERE id = ?",
                 book.getTitle(), book.getIsbn(), book.getYearPublished(), publisherId, book.getId());
 
         setBookAuthors(book);
@@ -90,16 +93,16 @@ public class JdbcBookService implements BookService {
     }
 
     private List<Author> getAuthorsByBookId(Integer bookId) {
-        return jdbc
+        return jdbcTemplate
                 .query("SELECT a.id, a.name FROM authors_books ab LEFT JOIN authors a ON ab.author_id = a.id WHERE ab.book_id = ?",
                         new Object[]{bookId}, new JdbcAuthorService.AuthorRowMapper());
     }
 
     private void setBookAuthors(Book book) {
-        jdbc.update("DELETE FROM authors_books WHERE book_id = ?", book.getId());
+        jdbcTemplate.update("DELETE FROM authors_books WHERE book_id = ?", book.getId());
         if (book.getAuthors() != null) {
             for (Author author : book.getAuthors()) {
-                jdbc.update("INSERT INTO authors_books(book_id, author_id) VALUES (?, ?)", book.getId(),
+                jdbcTemplate.update("INSERT INTO authors_books(book_id, author_id) VALUES (?, ?)", book.getId(),
                         author.getId());
             }
         }
@@ -107,7 +110,7 @@ public class JdbcBookService implements BookService {
 
     @Override
     public void deleteById(Integer id) {
-        jdbc.update("DELETE FROM books WHERE id = ?", id);
+        jdbcTemplate.update("DELETE FROM books WHERE id = ?", id);
     }
 
     class BookRowMapper implements RowMapper<Book> {
