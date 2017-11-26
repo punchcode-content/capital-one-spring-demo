@@ -17,9 +17,11 @@ public class Book {
 
     @NotNull
     @Size(min = 1, message = "Title cannot be empty")
+    @Column(nullable = false)
     private String title;
 
     @Pattern(regexp = "^|978-\\d{10}$", message = "ISBN must be 13 digits in the format 978-XXXXXXXXXX")
+    @Column(unique = true)
     private String isbn;
 
     private Integer yearPublished;
@@ -31,6 +33,7 @@ public class Book {
     private List<Author> authors;
 
     @ManyToOne
+    @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
     public String getAuthorsString() {

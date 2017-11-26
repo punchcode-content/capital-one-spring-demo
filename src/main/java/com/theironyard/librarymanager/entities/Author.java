@@ -14,6 +14,7 @@ public class Author {
 
     @NotNull
     @Size(min = 1, message = "Name cannot be empty")
+    @Column(nullable = false)
     private String name;
 
     public Integer getId() {

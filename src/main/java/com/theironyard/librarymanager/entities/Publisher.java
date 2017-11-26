@@ -13,6 +13,7 @@ public class Publisher {
 
     @NotNull
     @Size(min = 1, message = "Name cannot be empty")
+    @Column(nullable = false, unique = true)
     private String name;
 
     public Integer getId() {
