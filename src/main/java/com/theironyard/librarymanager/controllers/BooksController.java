@@ -4,9 +4,6 @@ import com.theironyard.librarymanager.entities.Book;
 import com.theironyard.librarymanager.repositories.AuthorRepository;
 import com.theironyard.librarymanager.repositories.BookRepository;
 import com.theironyard.librarymanager.repositories.PublisherRepository;
-import com.theironyard.librarymanager.services.AuthorService;
-import com.theironyard.librarymanager.services.BookService;
-import com.theironyard.librarymanager.services.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,10 +22,6 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/books")
 public class BooksController {
-    private BookService bookService;
-    private PublisherService publisherService;
-    private AuthorService authorService;
-
     private BookRepository bookRepository;
     private PublisherRepository publisherRepository;
     private AuthorRepository authorRepository;
