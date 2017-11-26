@@ -25,7 +25,9 @@ public class Book {
     private Integer yearPublished;
 
     @ManyToMany
-    @JoinTable(name = "authors_books")
+    @JoinTable(name = "authors_books",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
     private List<Author> authors;
 
     @ManyToOne
