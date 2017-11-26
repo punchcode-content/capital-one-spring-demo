@@ -3,7 +3,11 @@ package com.theironyard.librarymanager.controllers;
 import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.entities.Book;
 import com.theironyard.librarymanager.entities.Publisher;
-import com.theironyard.librarymanager.services.*;
+import com.theironyard.librarymanager.repositories.AuthorRepository;
+import com.theironyard.librarymanager.repositories.BookRepository;
+import com.theironyard.librarymanager.repositories.PublisherRepository;
+import com.theironyard.librarymanager.services.AuthorFormatter;
+import com.theironyard.librarymanager.services.PublisherFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -30,9 +34,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BooksControllerTests {
     @Autowired private MockMvc mvc;
 
-    @MockBean private BookService bookService;
-    @MockBean private PublisherService publisherService;
-    @MockBean private AuthorService authorService;
+    @MockBean private BookRepository bookRepository;
+    @MockBean private AuthorRepository authorRepository;
+    @MockBean private PublisherRepository publisherRepository;
     @MockBean private PublisherFormatter publisherFormatter;
     @MockBean private AuthorFormatter authorFormatter;
 
@@ -40,7 +44,7 @@ public class BooksControllerTests {
     public void testIndex() throws Exception {
         Book book1 = new Book();
         Book book2 = new Book();
-        given(bookService.listAll()).willReturn(Arrays.asList(book1, book2));
+        given(bookRepository.findAll()).willReturn(Arrays.asList(book1, book2));
 
         mvc.perform(get("/books")
                 .accept(MediaType.TEXT_HTML))
@@ -48,7 +52,7 @@ public class BooksControllerTests {
            .andExpect(view().name("books/index"))
            .andExpect(model().attribute("books", hasSize(2)));
 
-        verify(bookService, times(1)).listAll();
+        verify(bookRepository, times(1)).findAll();
     }
 
     @Captor
@@ -63,7 +67,7 @@ public class BooksControllerTests {
                 .param("isbn", "978-0000000000"))
            .andExpect(status().isFound());
 
-        verify(bookService, times(1)).saveOrUpdate(captor.capture());
+        verify(bookRepository, times(1)).save(captor.capture());
 
         Book book = captor.getValue();
         assertThat(book.getTitle(), equalTo("Test Book"));
@@ -84,7 +88,7 @@ public class BooksControllerTests {
                 .param("publisher", "1"))
            .andExpect(status().isFound());
 
-        verify(bookService, times(1)).saveOrUpdate(captor.capture());
+        verify(bookRepository, times(1)).save(captor.capture());
 
         Book book = captor.getValue();
         assertThat(book.getPublisher(), equalTo(publisher));
@@ -112,7 +116,7 @@ public class BooksControllerTests {
                 .param("authors[1]", "2"))
            .andExpect(status().isFound());
 
-        verify(bookService, times(1)).saveOrUpdate(captor.capture());
+        verify(bookRepository, times(1)).save(captor.capture());
 
         Book book = captor.getValue();
         assertThat(book.getAuthorsString(), equalTo("Test1, Test2"));

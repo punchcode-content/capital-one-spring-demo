@@ -1,4 +1,4 @@
-package com.theironyard.librarymanager.services;
+package com.theironyard.librarymanager.repositories;
 
 import com.theironyard.librarymanager.entities.Publisher;
 import org.junit.Test;
@@ -10,44 +10,51 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasProperty;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class PublisherServiceTests {
-    @Autowired private PublisherService service;
+public class PublisherRepositoryTests {
+    @Autowired private PublisherRepository publisherRepo;
 
     @Test
     public void testIdAutomaticallyAssigned() {
         Publisher publisher = new Publisher();
         publisher.setName("Publisher");
-        Publisher savedPublisher = service.saveOrUpdate(publisher);
+        Publisher savedPublisher = publisherRepo.save(publisher);
 
-        assertThat(savedPublisher, notNullValue());
+        assertNotNull(savedPublisher.getId());
     }
 
     @Test
     public void testCanRetrieveSavedPublisher() {
         Publisher publisher = new Publisher();
         publisher.setName("Publisher");
-        publisher = service.saveOrUpdate(publisher);
+        publisher = publisherRepo.save(publisher);
 
-        Publisher retrievedPublisher = service.getById(publisher.getId());
+        Publisher retrievedPublisher = publisherRepo.findOne(publisher.getId());
         assertThat(retrievedPublisher, notNullValue());
         assertThat(retrievedPublisher.getId(), equalTo(publisher.getId()));
+        assertThat(retrievedPublisher.getName(), equalTo("Publisher"));
     }
 
     @Test
-    public void testCanListAll() {
-        Publisher publisher = new Publisher();
-        publisher.setName("A Test Publisher");
-        publisher = service.saveOrUpdate(publisher);
+    public void testFindAll() {
+        List<Publisher> publishers = publisherRepo.findAll();
+        assertNotNull(publishers);
+        assertTrue(publishers.isEmpty());
 
-        List<Publisher> publishers = service.listAll();
-        assertThat(publishers, hasItem(hasProperty("id", is(publisher.getId()))));
+        Publisher publisher = new Publisher();
+        publisher.setName("Publisher");
+        publisherRepo.save(publisher);
+
+        publishers = publisherRepo.findAll();
+        assertNotNull(publishers);
+        assertTrue(!publishers.isEmpty());
     }
 
     @Test
@@ -55,12 +62,12 @@ public class PublisherServiceTests {
         // Set up -- save a new publisher
         Publisher publisher = new Publisher();
         publisher.setName("Publisher");
-        publisher = service.saveOrUpdate(publisher);
-        publisher = service.getById(publisher.getId());
+        publisher = publisherRepo.save(publisher);
+        publisher = publisherRepo.findOne(publisher.getId());
 
         publisher.setName("New name");
-        publisher = service.saveOrUpdate(publisher);
-        Publisher retrievedPublisher = service.getById(publisher.getId());
+        publisher = publisherRepo.save(publisher);
+        Publisher retrievedPublisher = publisherRepo.findOne(publisher.getId());
         assertThat(retrievedPublisher.getName(), equalTo("New name"));
     }
 
@@ -69,10 +76,10 @@ public class PublisherServiceTests {
         // Set up -- save a new publisher
         Publisher publisher = new Publisher();
         publisher.setName("Publisher");
-        publisher = service.saveOrUpdate(publisher);
+        publisher = publisherRepo.save(publisher);
 
-        service.deleteById(publisher.getId());
-        Publisher retrievedPublisher = service.getById(publisher.getId());
-        assertThat(retrievedPublisher, nullValue());
+        publisherRepo.delete(publisher.getId());
+        Publisher retrievedPublisher = publisherRepo.findOne(publisher.getId());
+        assertNull(retrievedPublisher);
     }
 }
