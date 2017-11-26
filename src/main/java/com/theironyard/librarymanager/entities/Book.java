@@ -1,5 +1,6 @@
 package com.theironyard.librarymanager.entities;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -7,7 +8,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Entity
+@Table(name = "books")
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
@@ -19,7 +24,11 @@ public class Book {
 
     private Integer yearPublished;
 
+    @ManyToMany
+    @JoinTable(name = "authors_books")
     private List<Author> authors;
+
+    @ManyToOne
     private Publisher publisher;
 
     public String getAuthorsString() {
