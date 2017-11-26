@@ -3,9 +3,9 @@ package com.theironyard.librarymanager.listeners;
 import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.entities.Book;
 import com.theironyard.librarymanager.entities.Publisher;
-import com.theironyard.librarymanager.services.AuthorService;
-import com.theironyard.librarymanager.services.BookService;
-import com.theironyard.librarymanager.services.PublisherService;
+import com.theironyard.librarymanager.repositories.AuthorRepository;
+import com.theironyard.librarymanager.repositories.BookRepository;
+import com.theironyard.librarymanager.repositories.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -18,52 +18,52 @@ import java.util.List;
 @Component
 @Profile("dev")
 public class SampleDataListener implements ApplicationListener<ContextRefreshedEvent> {
-    private AuthorService authorService;
-    private PublisherService publisherService;
-    private BookService bookService;
+    private AuthorRepository authorRepository;
+    private PublisherRepository publisherRepository;
+    private BookRepository bookRepository;
 
     @Autowired
-    public void setAuthorService(AuthorService authorService) {
-        this.authorService = authorService;
+    public void setAuthorRepository(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
     @Autowired
-    public void setPublisherService(PublisherService publisherService) {
-        this.publisherService = publisherService;
+    public void setPublisherRepository(PublisherRepository publisherRepository) {
+        this.publisherRepository = publisherRepository;
     }
 
     @Autowired
-    public void setBookService(BookService bookService) {
-        this.bookService = bookService;
+    public void setBookRepository(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         Author author1 = new Author();
         author1.setName("Kathy Sierra");
-        authorService.saveOrUpdate(author1);
+        authorRepository.save(author1);
 
         Author author2 = new Author();
         author2.setName("James Gosling");
-        authorService.saveOrUpdate(author2);
+        authorRepository.save(author2);
 
         Author author3 = new Author();
         author3.setName("Joshua Bloch");
-        authorService.saveOrUpdate(author3);
+        authorRepository.save(author3);
 
         Author author4 = new Author();
         author4.setName("Bert Bates");
-        authorService.saveOrUpdate(author4);
+        authorRepository.save(author4);
 
         System.out.println("Sample authors loaded");
 
         Publisher publisher1 = new Publisher();
         publisher1.setName("O'Reilly Media");
-        publisherService.saveOrUpdate(publisher1);
+        publisherRepository.save(publisher1);
 
         Publisher publisher2 = new Publisher();
         publisher2.setName("Addison-Wesley Professional");
-        publisherService.saveOrUpdate(publisher2);
+        publisherRepository.save(publisher2);
 
         System.out.println("Sample publishers loaded");
 
@@ -76,7 +76,7 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
         book1authors.add(author1);
         book1authors.add(author4);
         book1.setAuthors(book1authors);
-        bookService.saveOrUpdate(book1);
+        bookRepository.save(book1);
 
         Book book2 = new Book();
         book2.setTitle("Effective Java, 3nd Edition");
@@ -86,7 +86,7 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
         List<Author> book2authors = new ArrayList<>();
         book2authors.add(author3);
         book2.setAuthors(book2authors);
-        bookService.saveOrUpdate(book2);
+        bookRepository.save(book2);
 
         System.out.println("Sample books loaded");
     }

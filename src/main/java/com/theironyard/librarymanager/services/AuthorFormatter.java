@@ -1,6 +1,7 @@
 package com.theironyard.librarymanager.services;
 
 import com.theironyard.librarymanager.entities.Author;
+import com.theironyard.librarymanager.repositories.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.Formatter;
 import org.springframework.stereotype.Service;
@@ -10,17 +11,17 @@ import java.util.Locale;
 
 @Service
 public class AuthorFormatter implements Formatter<Author> {
-    private AuthorService authorService;
+    private AuthorRepository authorRepository;
 
     @Autowired
-    public void setAuthorService(AuthorService authorService) {
-        this.authorService = authorService;
+    public void setAuthorRepository(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
     @Override
     public Author parse(String text, Locale locale) throws ParseException {
         Integer id = Integer.valueOf(text);
-        return authorService.getById(id);
+        return authorRepository.findOne(id);
     }
 
     @Override

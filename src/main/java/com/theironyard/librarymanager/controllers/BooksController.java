@@ -1,7 +1,9 @@
 package com.theironyard.librarymanager.controllers;
 
-import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.entities.Book;
+import com.theironyard.librarymanager.repositories.AuthorRepository;
+import com.theironyard.librarymanager.repositories.BookRepository;
+import com.theironyard.librarymanager.repositories.PublisherRepository;
 import com.theironyard.librarymanager.services.AuthorService;
 import com.theironyard.librarymanager.services.BookService;
 import com.theironyard.librarymanager.services.PublisherService;
@@ -27,24 +29,28 @@ public class BooksController {
     private PublisherService publisherService;
     private AuthorService authorService;
 
+    private BookRepository bookRepository;
+    private PublisherRepository publisherRepository;
+    private AuthorRepository authorRepository;
+
     @Autowired
-    public void setBookService(BookService bookService) {
-        this.bookService = bookService;
+    public void setBookRepository(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     @Autowired
-    public void setPublisherService(PublisherService publisherService) {
-        this.publisherService = publisherService;
+    public void setPublisherRepository(PublisherRepository publisherRepository) {
+        this.publisherRepository = publisherRepository;
     }
 
     @Autowired
-    public void setAuthorService(AuthorService authorService) {
-        this.authorService = authorService;
+    public void setAuthorRepository(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
     @GetMapping("")
     public String index(Model model) {
-        List<Book> books = bookService.listAll();
+        List<Book> books = bookRepository.findAll();
         model.addAttribute("books", books);
         return "books/index";
     }
@@ -53,23 +59,19 @@ public class BooksController {
     public String newForm(Model model) {
         Book book = new Book();
         book.setAuthors(new ArrayList<>());
-        model.addAttribute("book", book);
-        model.addAttribute("publishers", publisherService.listAll());
-        model.addAttribute("authors", authorService.listAll());
+        setupFormModel(model, book);
         return "books/form";
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Integer id, Model model) {
-        Book book = bookService.getById(id);
+        Book book = bookRepository.findOne(id);
 
         if (book.getAuthors() == null) {
             book.setAuthors(new ArrayList<>());
         }
 
-        model.addAttribute("book", book);
-        model.addAttribute("publishers", publisherService.listAll());
-        model.addAttribute("authors", authorService.listAll());
+        setupFormModel(model, book);
         return "books/form";
     }
 
@@ -77,29 +79,23 @@ public class BooksController {
     public String saveOrUpdate(@Valid Book book, BindingResult result, Model model) {
         if (result.hasErrors()) {
             book.setAuthors(book.getAuthors().stream().filter(Objects::nonNull).collect(Collectors.toList()));
-            model.addAttribute("publishers", publisherService.listAll());
-            model.addAttribute("authors", authorService.listAll());
+            setupFormModel(model, book);
             return "books/form";
         }
 
-        if (book.getId() == null) {
-            bookService.saveOrUpdate(book);
-        } else {
-            Book prevBook = bookService.getById(book.getId());
-            prevBook.setTitle(book.getTitle());
-            prevBook.setIsbn(book.getIsbn());
-            prevBook.setYearPublished(book.getYearPublished());
-            prevBook.setPublisher(book.getPublisher());
-            List<Author> authors = book.getAuthors().stream().filter(Objects::nonNull).collect(Collectors.toList());
-            prevBook.setAuthors(authors);
-            bookService.saveOrUpdate(prevBook);
-        }
+        bookRepository.save(book);
         return "redirect:/books";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Integer id) {
-        bookService.deleteById(id);
+        bookRepository.delete(id);
         return "redirect:/books";
+    }
+
+    private void setupFormModel(Model model, Book book) {
+        model.addAttribute("book", book);
+        model.addAttribute("publishers", publisherRepository.findAll());
+        model.addAttribute("authors", authorRepository.findAll());
     }
 }

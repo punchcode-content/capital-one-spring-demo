@@ -1,7 +1,7 @@
 package com.theironyard.librarymanager.controllers;
 
 import com.theironyard.librarymanager.entities.Publisher;
-import com.theironyard.librarymanager.services.PublisherService;
+import com.theironyard.librarymanager.repositories.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,16 +17,16 @@ import java.util.List;
 @Controller
 @RequestMapping("/publishers")
 public class PublishersController {
-    private PublisherService publisherService;
+    private PublisherRepository repository;
 
     @Autowired
-    private void setPublisherService(PublisherService publisherService) {
-        this.publisherService = publisherService;
+    private void setPublisherRepository(PublisherRepository repository) {
+        this.repository = repository;
     }
 
     @GetMapping(value = "")
     public String index(Model model) {
-        List<Publisher> publishers = publisherService.listAll();
+        List<Publisher> publishers = repository.findAll();
         model.addAttribute("publishers", publishers);
         return "publishers/index";
     }
@@ -40,7 +40,7 @@ public class PublishersController {
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Integer id, Model model) {
-        Publisher publisher = publisherService.getById(id);
+        Publisher publisher = repository.findOne(id);
         model.addAttribute("publisher", publisher);
         return "publishers/form";
     }
@@ -51,13 +51,13 @@ public class PublishersController {
             return "publishers/form";
         }
 
-        publisherService.saveOrUpdate(publisher);
+        repository.save(publisher);
         return "redirect:/publishers";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Integer id) {
-        publisherService.deleteById(id);
+        repository.delete(id);
         return "redirect:/publishers";
     }
 }
