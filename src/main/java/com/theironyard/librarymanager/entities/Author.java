@@ -3,6 +3,7 @@ package com.theironyard.librarymanager.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,6 +17,9 @@ public class Author {
     @Size(min = 1, message = "Name cannot be empty")
     @Column(nullable = false)
     private String name;
+
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
+    private List<Book> books;
 
     public Integer getId() {
         return id;
@@ -33,6 +37,14 @@ public class Author {
         this.name = name;
     }
 
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -44,5 +56,11 @@ public class Author {
 
         Author author = (Author) obj;
         return Objects.equals(id, author.getId()) && Objects.equals(name, author.getName());
+    }
+
+    public static Author withName(String name) {
+        Author author = new Author();
+        author.setName(name);
+        return author;
     }
 }
