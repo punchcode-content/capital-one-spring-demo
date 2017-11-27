@@ -36,6 +36,12 @@ public class Book {
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
+    static Book withTitle(String title) {
+        Book book = new Book();
+        book.setTitle(title);
+        return book;
+    }
+
     public String getAuthorsString() {
         if (authors == null || authors.isEmpty()) {
             return "";
@@ -94,11 +100,11 @@ public class Book {
 
     public void setPublisher(Publisher publisher) {
         this.publisher = publisher;
+        publisher.addBook(this);
     }
 
-    public static Book withTitle(String title) {
-        Book book = new Book();
-        book.setTitle(title);
-        return book;
+    @Override
+    public boolean equals(Object o) {
+        return this == o || (o instanceof Book && id != null && id.equals(((Book) o).id));
     }
 }

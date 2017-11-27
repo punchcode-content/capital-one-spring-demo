@@ -3,7 +3,7 @@ package com.theironyard.librarymanager.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,6 +20,12 @@ public class Publisher {
 
     @OneToMany(mappedBy = "publisher", fetch = FetchType.EAGER)
     private Set<Book> books;
+
+    static Publisher withName(String name) {
+        Publisher publisher = new Publisher();
+        publisher.setName(name);
+        return publisher;
+    }
 
     public Integer getId() {
         return id;
@@ -45,9 +51,10 @@ public class Publisher {
         this.books = books;
     }
 
-    public static Publisher withName(String name) {
-        Publisher publisher = new Publisher();
-        publisher.setName(name);
-        return publisher;
+    void addBook(Book book) {
+        if (books == null) {
+            books = new HashSet<>();
+        }
+        books.add(book);
     }
 }
