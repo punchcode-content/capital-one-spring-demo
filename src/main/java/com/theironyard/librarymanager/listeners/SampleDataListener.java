@@ -3,6 +3,8 @@ package com.theironyard.librarymanager.listeners;
 import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.entities.Book;
 import com.theironyard.librarymanager.entities.Publisher;
+import com.theironyard.librarymanager.importer.BookImporter;
+import com.theironyard.librarymanager.importer.BookRecord;
 import com.theironyard.librarymanager.repositories.AuthorRepository;
 import com.theironyard.librarymanager.repositories.BookRepository;
 import com.theironyard.librarymanager.repositories.PublisherRepository;
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,12 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
     private AuthorRepository authorRepository;
     private PublisherRepository publisherRepository;
     private BookRepository bookRepository;
+    private BookImporter bookImporter;
+
+    @Autowired
+    public void setBookImporter(BookImporter bookImporter) {
+        this.bookImporter = bookImporter;
+    }
 
     @Autowired
     public void setAuthorRepository(AuthorRepository authorRepository) {
@@ -58,7 +67,7 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
         System.out.println("Sample authors loaded");
 
         Publisher publisher1 = new Publisher();
-        publisher1.setName("O'Reilly Media");
+        publisher1.setName("O'Reilly");
         publisherRepository.save(publisher1);
 
         Publisher publisher2 = new Publisher();
@@ -78,15 +87,7 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
         book1.setAuthors(book1authors);
         bookRepository.save(book1);
 
-        Book book2 = new Book();
-        book2.setTitle("Effective Java, 3nd Edition");
-        book2.setIsbn("978-0134685991");
-        book2.setYearPublished(2017);
-        book2.setPublisher(publisher2);
-        List<Author> book2authors = new ArrayList<>();
-        book2authors.add(author3);
-        book2.setAuthors(book2authors);
-        bookRepository.save(book2);
+        bookImporter.runImport();
 
         System.out.println("Sample books loaded");
     }

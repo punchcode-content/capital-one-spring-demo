@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -87,6 +88,9 @@ public class Book {
     }
 
     public List<Author> getAuthors() {
+        if (authors == null) {
+            authors = new ArrayList<>();
+        }
         return authors;
     }
 
@@ -101,6 +105,24 @@ public class Book {
     public void setPublisher(Publisher publisher) {
         this.publisher = publisher;
         publisher.addBook(this);
+    }
+
+    public String getUrl() {
+        if (getId() != null) {
+            return "/books/" + getId();
+        }
+        return null;
+    }
+
+    public String getImageUrl() {
+        if (getIsbn() != null) {
+            return "http://covers.openlibrary.org/b/isbn/" + getIsbn() + "-M.jpg";
+        }
+        return null;
+    }
+
+    public void addAuthor(Author author) {
+        this.getAuthors().add(author);
     }
 
     @Override

@@ -51,6 +51,13 @@ public class Publisher {
         this.books = books;
     }
 
+    public String getUrl() {
+        if (getId() != null) {
+            return "/publishers/" + getId();
+        }
+        return null;
+    }
+
     void addBook(Book book) {
         if (books == null) {
             books = new HashSet<>();

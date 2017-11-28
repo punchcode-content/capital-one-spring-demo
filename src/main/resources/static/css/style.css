@@ -1,0 +1,10 @@
+.book {
+    border-color: #a9a9a9;
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    padding: 1.25rem;
+}
+
+.book:last-child {
+    border-bottom-width: 0;
+}

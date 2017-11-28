@@ -5,29 +5,28 @@
     <div class="container">
         <h1>Books</h1>
         <div th:if="${not #lists.isEmpty(books)}">
-            <table class="table table-striped">
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Authors</th>
-                    <th>Publisher</th>
-                    <th>Actions</th>
-                </tr>
-                <tr th:each="book : ${books}">
-                    <td th:text="${book.id}"></td>
-                    <td th:text="${book.title}"></td>
-                    <td th:text="${book.authorsString}"></td>
-                    <td th:text="${book.publisher} ? ${book.publisher.name}"></td>
-                    <td>
-                        <a class="btn btn-primary" th:href="@{|/books/${book.id}/edit|}">Edit</a>
-                        <form class="form" th:object="${book}" th:action="@{|/books/${book.id}/delete|}"
-                              method="POST"
-                              style="display: inline-block;">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            </table>
+            <div class="book row" th:each="book : ${books}">
+                <div class="col-md-9">
+                    <h4 th:text="${book.title}">Book title</h4>
+                    <h6 th:text="${book.authorsString}">Authors</h6>
+                    <p>
+                    <div th:if="${book.publisher} != null">
+                        Publisher:
+                        <a href="#" th:href="@{__${book.publisher.url}__}"
+                           th:text="${book.publisher.name}">Publisher</a>
+                    </div>
+                    <div th:if="${book.isbn} != null"
+                         th:text="|ISBN: ${book.isbn}|">ISBN
+                    </div>
+                    <div th:if="${book.yearPublished} != null"
+                         th:text="|Year Published: ${book.yearPublished}|">Year Published
+                    </div>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <img th:if="${book.imageUrl} != null" th:src="${book.imageUrl}" />
+                </div>
+            </div>
         </div>
 
         <div>

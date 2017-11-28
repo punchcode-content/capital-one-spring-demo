@@ -46,16 +46,8 @@ public class Author {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-
-        Author author = (Author) obj;
-        return Objects.equals(id, author.getId()) && Objects.equals(name, author.getName());
+    public boolean equals(Object o) {
+        return this == o || (o instanceof Author && id != null && id.equals(((Author) o).id));
     }
 
     public static Author withName(String name) {

@@ -35,6 +35,7 @@ dependencies {
     compile('org.webjars.npm:popper.js:1.12.5')
     compile('org.postgresql:postgresql:42.1.4')
     compile('org.flywaydb:flyway-core')
+    compile('com.opencsv:opencsv:4.1')
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime('com.h2database:h2')
     testCompile('org.springframework.boot:spring-boot-starter-test')
