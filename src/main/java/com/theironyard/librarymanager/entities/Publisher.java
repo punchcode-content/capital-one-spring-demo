@@ -1,5 +1,7 @@
 package com.theironyard.librarymanager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,6 +21,7 @@ public class Publisher {
     private String name;
 
     @OneToMany(mappedBy = "publisher", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Book> books;
 
     static Publisher withName(String name) {

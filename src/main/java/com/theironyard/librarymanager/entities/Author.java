@@ -1,5 +1,7 @@
 package com.theironyard.librarymanager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,6 +20,7 @@ public class Author {
     private String name;
 
     @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Book> books;
 
     static Author withName(String name) {
