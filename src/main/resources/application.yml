@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    platform: h2
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      javax:
+        persistence:
+          schema-generation:
+            create-source: metadata
+            scripts:
+              action: create
+              create-target: create.sql
+logging:
+  level:
+    org:
+      hiberate:
+        SQL: debug
+      type:
+        descriptor:
+          sql: trace
+flyway:
+  placeholders:
+    autoincrement: IDENTITY
+
+---
+name: prod-YAML
+spring:
+  profiles: prod
+  datasource:
+    platform: postgresql
+    url: jdbc:postgresql://localhost/library
+    username: library
+flyway:
+  placeholders:
+    autoincrement: SERIAL
