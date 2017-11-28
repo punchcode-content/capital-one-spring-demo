@@ -8,3 +8,7 @@
 .book:last-child {
     border-bottom-width: 0;
 }
+
+.book-info {
+    margin: 1rem 0;
+}

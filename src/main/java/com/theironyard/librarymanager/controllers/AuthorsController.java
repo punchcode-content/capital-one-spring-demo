@@ -38,6 +38,13 @@ public class AuthorsController {
         return "authors/form";
     }
 
+    @GetMapping("/{id}")
+    public String show(@PathVariable Integer id, Model model) {
+        Author author = repository.findOne(id);
+        model.addAttribute("author", author);
+        return "authors/show";
+    }
+
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Integer id, Model model) {
         Author author = repository.findOne(id);

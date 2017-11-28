@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "authors")
@@ -20,6 +19,12 @@ public class Author {
 
     @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
     private List<Book> books;
+
+    static Author withName(String name) {
+        Author author = new Author();
+        author.setName(name);
+        return author;
+    }
 
     public Integer getId() {
         return id;
@@ -45,14 +50,15 @@ public class Author {
         this.books = books;
     }
 
+    public String getUrl() {
+        if (getId() != null) {
+            return "/authors/" + getId();
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         return this == o || (o instanceof Author && id != null && id.equals(((Author) o).id));
-    }
-
-    public static Author withName(String name) {
-        Author author = new Author();
-        author.setName(name);
-        return author;
     }
 }

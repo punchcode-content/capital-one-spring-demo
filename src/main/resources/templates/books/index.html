@@ -8,23 +8,39 @@
             <div class="book row" th:each="book : ${books}">
                 <div class="col-md-9">
                     <h4 th:text="${book.title}">Book title</h4>
-                    <h6 th:text="${book.authorsString}">Authors</h6>
-                    <p>
-                    <div th:if="${book.publisher} != null">
-                        Publisher:
-                        <a href="#" th:href="@{__${book.publisher.url}__}"
-                           th:text="${book.publisher.name}">Publisher</a>
+                    <h6>
+                        <span th:each="author, iter : ${book.authors}">
+                            <a th:href="@{__${author.url}__}" th:text="${author.name}">
+                                Author
+                            </a><span th:if="!${iter.last}" th:text="', '"></span>
+                        </span>
+                    </h6>
+
+                    <div class="book-info">
+                        <div th:if="${book.publisher} != null">
+                            Publisher:
+                            <a href="#" th:href="@{__${book.publisher.url}__}"
+                               th:text="${book.publisher.name}">Publisher</a>
+                        </div>
+                        <div th:if="${book.isbn} != null"
+                             th:text="|ISBN: ${book.isbn}|">ISBN
+                        </div>
+                        <div th:if="${book.yearPublished} != null"
+                             th:text="|Year Published: ${book.yearPublished}|">Year Published
+                        </div>
                     </div>
-                    <div th:if="${book.isbn} != null"
-                         th:text="|ISBN: ${book.isbn}|">ISBN
+
+                    <div class="actions">
+                        <a class="btn btn-primary" th:href="@{|/books/${book.id}/edit|}">Edit</a>
+                        <form class="form" th:object="${book}" th:action="@{|/books/${book.id}/delete|}"
+                              method="POST"
+                              style="display: inline-block;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
-                    <div th:if="${book.yearPublished} != null"
-                         th:text="|Year Published: ${book.yearPublished}|">Year Published
-                    </div>
-                    </p>
                 </div>
                 <div class="col-md-3">
-                    <img th:if="${book.imageUrl} != null" th:src="${book.imageUrl}" />
+                    <img th:if="${book.imageUrl} != null" th:src="${book.imageUrl}"/>
                 </div>
             </div>
         </div>
