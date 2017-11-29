@@ -3,6 +3,7 @@
 <head th:include="base :: head"/>
 <body>
     <div class="container">
+        <div th:include="base :: pageHeader"/>
         <h1>Books</h1>
         <div th:if="${not #lists.isEmpty(books)}">
             <div class="book row" th:each="book : ${books}">
