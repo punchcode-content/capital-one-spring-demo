@@ -1,6 +1,9 @@
 package com.theironyard.librarymanager.entities;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -10,10 +13,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty
     @Column(nullable = false, unique = true)
     private String username;
 
     @Transient
+    @Size(min = 6, message = "Password must be at least 6 characters.")
     private String password;
 
     private String encryptedPassword;
@@ -54,5 +59,13 @@ public class User {
 
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

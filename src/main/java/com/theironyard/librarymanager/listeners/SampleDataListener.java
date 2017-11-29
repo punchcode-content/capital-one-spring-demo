@@ -3,18 +3,18 @@ package com.theironyard.librarymanager.listeners;
 import com.theironyard.librarymanager.entities.Author;
 import com.theironyard.librarymanager.entities.Book;
 import com.theironyard.librarymanager.entities.Publisher;
+import com.theironyard.librarymanager.entities.User;
 import com.theironyard.librarymanager.importer.BookImporter;
-import com.theironyard.librarymanager.importer.BookRecord;
 import com.theironyard.librarymanager.repositories.AuthorRepository;
 import com.theironyard.librarymanager.repositories.BookRepository;
 import com.theironyard.librarymanager.repositories.PublisherRepository;
+import com.theironyard.librarymanager.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,25 +25,19 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
     private PublisherRepository publisherRepository;
     private BookRepository bookRepository;
     private BookImporter bookImporter;
+    private UserService userService;
 
     @Autowired
-    public void setBookImporter(BookImporter bookImporter) {
-        this.bookImporter = bookImporter;
-    }
-
-    @Autowired
-    public void setAuthorRepository(AuthorRepository authorRepository) {
+    public SampleDataListener(AuthorRepository authorRepository,
+                              PublisherRepository publisherRepository,
+                              BookRepository bookRepository,
+                              BookImporter bookImporter,
+                              UserService userService) {
         this.authorRepository = authorRepository;
-    }
-
-    @Autowired
-    public void setPublisherRepository(PublisherRepository publisherRepository) {
         this.publisherRepository = publisherRepository;
-    }
-
-    @Autowired
-    public void setBookRepository(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
+        this.bookImporter = bookImporter;
+        this.userService = userService;
     }
 
     @Override
@@ -90,5 +84,12 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
         bookImporter.runImport();
 
         System.out.println("Sample books loaded");
+
+        User user = new User();
+        user.setUsername("admin");
+        user.setPassword("IAmTheAdmin");
+        userService.save(user);
+
+        System.out.println("Sample users loaded");
     }
 }

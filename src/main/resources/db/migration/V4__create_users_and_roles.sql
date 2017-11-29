@@ -1,11 +1,11 @@
 CREATE TABLE users (
-  id                 SERIAL PRIMARY KEY,
+  id                 ${AUTOINCREMENT} PRIMARY KEY,
   username           VARCHAR(255) NOT NULL UNIQUE,
   encrypted_password VARCHAR(255)
 );
 
 CREATE TABLE roles (
-  id   SERIAL PRIMARY KEY,
+  id   ${AUTOINCREMENT} PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE
 );
 
