@@ -23,7 +23,6 @@ public class ApiBooksController {
 
     @GetMapping("")
     public ApiBooksResponse index(
-            @RequestParam(required = false) Integer yearPublished,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer perPage) {
 
@@ -34,11 +33,7 @@ public class ApiBooksController {
         Page<Book> books;
         PageRequest pageRequest = new PageRequest(page, perPage);
 
-        if (yearPublished != null) {
-            books = bookRepository.findAllByYearPublished(yearPublished, pageRequest);
-        } else {
-            books = bookRepository.findAll(pageRequest);
-        }
+        books = bookRepository.findAll(pageRequest);
         return new ApiBooksResponse(books);
     }
 }
