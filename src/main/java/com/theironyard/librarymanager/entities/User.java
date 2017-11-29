@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -62,10 +63,17 @@ public class User {
     }
 
     public Set<Role> getRoles() {
+        if (roles == null) {
+            setRoles(new HashSet<>());
+        }
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        this.getRoles().add(role);
     }
 }

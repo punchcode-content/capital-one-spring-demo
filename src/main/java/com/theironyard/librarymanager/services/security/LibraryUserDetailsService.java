@@ -1,5 +1,6 @@
 package com.theironyard.librarymanager.services.security;
 
+import com.theironyard.librarymanager.entities.Role;
 import com.theironyard.librarymanager.entities.User;
 import com.theironyard.librarymanager.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,12 @@ public class LibraryUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     private static Collection<? extends GrantedAuthority> getAuthorities(User user) {
-        //        String[] userRoles = user.getRoles()
-        //                                 .stream()
-        //                                 .map(Role::getName)
-        //                                 .toArray(String[]::new);
-        return AuthorityUtils.createAuthorityList(new String[]{"USER"});
+        String[] userRoles = user.getRoles()
+                                 .stream()
+                                 .map(Role::getName)
+                                 .toArray(String[]::new);
+        //        String[] userRoles = {"USER", "ADMIN"};
+        return AuthorityUtils.createAuthorityList(userRoles);
     }
 
     @Autowired

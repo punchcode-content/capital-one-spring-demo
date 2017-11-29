@@ -3,23 +3,30 @@ package com.theironyard.librarymanager.controllers.api;
 import com.theironyard.librarymanager.entities.Book;
 import com.theironyard.librarymanager.repositories.BookRepository;
 import com.theironyard.librarymanager.responses.ApiBooksResponse;
+import com.theironyard.librarymanager.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/books")
 public class ApiBooksController {
     private BookRepository bookRepository;
+    private BookService bookService;
 
     @Autowired
     private void setBookRepository(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
+
+    @Autowired
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
+    }
+
 
     @GetMapping("")
     public ApiBooksResponse index(
@@ -35,5 +42,17 @@ public class ApiBooksController {
 
         books = bookRepository.findAll(pageRequest);
         return new ApiBooksResponse(books);
+    }
+
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Book create(@RequestBody Book book) {
+        Book newBook = bookService.save(book);
+        return newBook;
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) {
+        bookService.delete(id);
     }
 }

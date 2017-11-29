@@ -1,8 +1,4 @@
-security:
-  user:
-    name: admin
-    password: secret
-    role: USER,ADMIN
+
 spring:
   datasource:
     platform: h2
@@ -29,7 +25,7 @@ logging:
 flyway:
   placeholders:
     autoincrement: IDENTITY
-
+    AUTOINCREMENT: IDENTITY
 ---
 name: prod-YAML
 spring:
@@ -41,3 +37,4 @@ spring:
 flyway:
   placeholders:
     autoincrement: SERIAL
+    AUTOINCREMENT: SERIAL

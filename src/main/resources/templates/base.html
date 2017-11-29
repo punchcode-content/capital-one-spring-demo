@@ -16,19 +16,7 @@
 <body>
     <div class="container">
         <div th:fragment="pageHeader">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="/">Library Manager</a>
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav">
-                        <li th:if="${!#authentication.isAuthenticated()}" class="nav-item">
-                            <a class="nav-link" th:href="@{/login}">Login</a>
-                        </li>
-                        <li th:if="${#authentication.isAuthenticated()}" class="nav-item">
-                            <a class="nav-link" th:href="@{/logout}">Logout</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+
         </div>
         <h1>Links</h1>
         <ul>

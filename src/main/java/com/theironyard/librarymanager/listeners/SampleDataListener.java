@@ -1,13 +1,11 @@
 package com.theironyard.librarymanager.listeners;
 
-import com.theironyard.librarymanager.entities.Author;
-import com.theironyard.librarymanager.entities.Book;
-import com.theironyard.librarymanager.entities.Publisher;
-import com.theironyard.librarymanager.entities.User;
+import com.theironyard.librarymanager.entities.*;
 import com.theironyard.librarymanager.importer.BookImporter;
 import com.theironyard.librarymanager.repositories.AuthorRepository;
 import com.theironyard.librarymanager.repositories.BookRepository;
 import com.theironyard.librarymanager.repositories.PublisherRepository;
+import com.theironyard.librarymanager.repositories.RoleRepository;
 import com.theironyard.librarymanager.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -19,25 +17,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Profile("dev")
 public class SampleDataListener implements ApplicationListener<ContextRefreshedEvent> {
     private AuthorRepository authorRepository;
     private PublisherRepository publisherRepository;
     private BookRepository bookRepository;
     private BookImporter bookImporter;
     private UserService userService;
+    private RoleRepository roleRepository;
 
     @Autowired
     public SampleDataListener(AuthorRepository authorRepository,
                               PublisherRepository publisherRepository,
                               BookRepository bookRepository,
                               BookImporter bookImporter,
-                              UserService userService) {
+                              UserService userService,
+                              RoleRepository roleRepository
+    ) {
         this.authorRepository = authorRepository;
         this.publisherRepository = publisherRepository;
         this.bookRepository = bookRepository;
         this.bookImporter = bookImporter;
         this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -85,10 +86,37 @@ public class SampleDataListener implements ApplicationListener<ContextRefreshedE
 
         System.out.println("Sample books loaded");
 
+        Role userRole = new Role();
+        userRole.setName("ROLE_USER");
+        userRole = roleRepository.save(userRole);
+
+        Role adminRole = new Role();
+        adminRole.setName("ROLE_ADMIN");
+        adminRole = roleRepository.save(adminRole);
+
+        Role editorRole = new Role();
+        editorRole.setName("ROLE_EDITOR");
+        editorRole = roleRepository.save(editorRole);
+
         User user = new User();
-        user.setUsername("admin");
-        user.setPassword("IAmTheAdmin");
+        user.setUsername("user");
+        user.setPassword("password");
+        user.addRole(userRole);
         userService.save(user);
+
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setPassword("password");
+        admin.addRole(userRole);
+        admin.addRole(adminRole);
+        userService.save(admin);
+
+        User editor = new User();
+        editor.setUsername("aspen");
+        editor.setPassword("password");
+        editor.addRole(userRole);
+        editor.addRole(editorRole);
+        userService.save(editor);
 
         System.out.println("Sample users loaded");
     }
